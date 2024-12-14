@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Expanding and Rotating Nodes with Transparency</title>
+    <style>
+        body { margin: 0; }
+        canvas { display: block; }
+    </style>
+</head>
+<body>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/build/three.min.js"></script>
+    <script>
+        // Set up scene, camera, and renderer
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        const nodes = [];
+        const velocities = [];
+        const nodeCount = 100;
+        const geometry = new THREE.SphereGeometry(0.1, 8, 8); // Reduced complexity
+        let lines = [];
+        const connections = [];
+
+        const primaryColors = [new THREE.Color(1.0, 0, 0), new THREE.Color(1.0, 1.0, 0), new THREE.Color(0, 0, 1.0)];
+        const secondaryColors = {
+            purple: new THREE.Color(0.5, 0, 0.5),
+            orange: new THREE.Color(1.0, 0.5, 0),
+            cyan: new THREE.Color(0, 1.0, 1.0)
+        };
+
+        function createNodes() {
+            for (let i = 0; i < nodeCount; i++) {
+                const color = primaryColors[i % 3];
+                const node = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({ color }));
+                node.position.set(Math.random() * 10 - 5, Math.random() * 10 - 5, Math.random() * 10 - 5);
+                nodes.push(node);
+                velocities.push(new THREE.Vector3((Math.random() - 0.5) * 0.01, (Math.random() - 0.5) * 0.01, (Math.random() - 0.5) * 0.01));
+                connections.push([]);
+                scene.add(node);
+            }
+        }
+
+        function updateConnections() {
+            const thresholdDistance = 3;
+            const activeLines = new Set(); // Track the active lines to remove inactive ones
+
+            nodes.forEach((node, i) => {
+                connections[i] = [];
+                let nearestNodes = nodes.filter((_, j) => i !== j && node.position.distanceTo(nodes[j].position) < thresholdDistance);
+                connections[i] = nearestNodes.length >= 8 ? nearestNodes.map(n => nodes.indexOf(n)) : findClosestNodes(i, 8);
+            });
+
+            // Update lines and remove unused ones
+            connections.forEach((conn, i) => {
+                conn.forEach(j => {
+                    const positions = [...nodes[i].position.toArray(), ...nodes[j].position.toArray()];
+                    const lineColor = getLineColor(nodes[i].material.color, nodes[j].material.color);
+
+                    let line = lines.find(l => (l.startIndex === i && l.endIndex === j) || (l.startIndex === j && l.endIndex === i));
+                    if (!line) {
+                        // Create a new line if it doesn't exist
+                        const lineGeometry = new THREE.BufferGeometry().setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+                        const lineMaterial = new THREE.LineBasicMaterial({ color: lineColor, transparent: true, opacity: 0.7 });
+                        line = new THREE.LineSegments(lineGeometry, lineMaterial);
+                        line.startIndex = i;
+                        line.endIndex = j;
+                        lines.push(line);
+                        scene.add(line);
+                    } else {
+                        // Update the existing line geometry
+                        const lineGeometry = line.geometry;
+                        lineGeometry.attributes.position.array.set(positions);
+                        lineGeometry.attributes.position.needsUpdate = true;
+                    }
+
+                    // Mark this line as active
+                    activeLines.add(line);
+                });
+            });
+
+            // Remove lines that are no longer active
+            lines.forEach(line => {
+                if (!activeLines.has(line)) {
+                    scene.remove(line);
+                    lines = lines.filter(l => l !== line); // Remove it from the array as well
+                }
+            });
+        }
+
+        function getLineColor(color1, color2) {
+            if ((color1.equals(primaryColors[0]) && color2.equals(primaryColors[2])) || (color1.equals(primaryColors[2]) && color2.equals(primaryColors[0]))) {
+                return secondaryColors.purple;
+            }
+            if ((color1.equals(primaryColors[0]) && color2.equals(primaryColors[1])) || (color1.equals(primaryColors[1]) && color2.equals(primaryColors[0]))) {
+                return secondaryColors.orange;
+            }
+            if ((color1.equals(primaryColors[2]) && color2.equals(primaryColors[1])) || (color1.equals(primaryColors[1]) && color2.equals(primaryColors[2]))) {
+                return secondaryColors.cyan;
+            }
+            return color1; // Same color nodes
+        }
+
+        function findClosestNodes(nodeIndex, n) {
+            const distances = nodes.map((_, i) => i !== nodeIndex && { index: i, distance: nodes[nodeIndex].position.distanceTo(nodes[i].position) })
+                                   .filter(Boolean)
+                                   .sort((a, b) => a.distance - b.distance);
+            return distances.slice(0, n).map(d => d.index);
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+
+            // Slowly expand the scene by moving nodes outward
+            nodes.forEach((node, i) => {
+                node.position.add(velocities[i]);
+
+                if (Math.abs(node.position.x) > 5) velocities[i].x = -velocities[i].x;
+                if (Math.abs(node.position.y) > 5) velocities[i].y = -velocities[i].y;
+                if (Math.abs(node.position.z) > 5) velocities[i].z = -velocities[i].z;
+
+                // Adjust node transparency based on distance from camera
+                const distance = node.position.distanceTo(camera.position);
+                const opacity = Math.max(0.1, 1 - distance / 20);  // Clamp opacity between 0.1 and 1
+                node.material.opacity = opacity;
+            });
+
+            // Slow rotation of the entire scene
+            scene.rotation.x += 0.0005;
+            scene.rotation.y += 0.0003;
+
+            // Update line transparency based on distance
+            lines.forEach(line => {
+                const distStart = nodes[line.startIndex].position.distanceTo(camera.position);
+                const distEnd = nodes[line.endIndex].position.distanceTo(camera.position);
+                const avgDist = (distStart + distEnd) / 2;
+                const opacity = Math.max(0.1, 1 - avgDist / 20); // Adjust for line transparency
+                line.material.opacity = opacity;
+            });
+
+            updateConnections();
+            renderer.render(scene, camera);
+        }
+
+        createNodes();
+        camera.position.z = 15;
+        animate();
+    </script>
+</body>
+</html>
