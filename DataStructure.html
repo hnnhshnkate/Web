@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dynamic Expanding and Rotating Nodes with Transparency</title>
+    <title>Dynamic Expanding and Rotating Nodes</title>
     <style>
         body { margin: 0; }
         canvas { display: block; }
@@ -22,7 +22,7 @@
         const nodes = [];
         const velocities = [];
         const nodeCount = 100;
-        const geometry = new THREE.SphereGeometry(0.1, 8, 8); // Reduced complexity
+        const geometry = new THREE.SphereGeometry(0.1, 16, 16); // Smoother spheres
         let lines = [];
         const connections = [];
 
@@ -33,13 +33,34 @@
             cyan: new THREE.Color(0, 1.0, 1.0)
         };
 
+        // Lighting setup
+        const ambientLight = new THREE.AmbientLight(0x404040, 1); // Soft light
+        scene.add(ambientLight);
+
+        const pointLight = new THREE.PointLight(0xffffff, 1, 100); // Bright point light
+        pointLight.position.set(10, 10, 10); // Light position
+        scene.add(pointLight);
+
         function createNodes() {
             for (let i = 0; i < nodeCount; i++) {
                 const color = primaryColors[i % 3];
-                const node = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({ color }));
+                const material = new THREE.MeshStandardMaterial({ 
+                    color, 
+                    emissive: color, 
+                    metalness: 0.5,  // Adds shiny surface
+                    roughness: 0.3   // Adds roughness to simulate a non-perfect surface
+                });
+                const node = new THREE.Mesh(geometry, material);
                 node.position.set(Math.random() * 10 - 5, Math.random() * 10 - 5, Math.random() * 10 - 5);
                 nodes.push(node);
-                velocities.push(new THREE.Vector3((Math.random() - 0.5) * 0.01, (Math.random() - 0.5) * 0.01, (Math.random() - 0.5) * 0.01));
+
+                // Assigning a random velocity for varied movement
+                const velocity = new THREE.Vector3(
+                    (Math.random() - 0.5) * (Math.random() * 0.05 + 0.01), // Randomized speed factor
+                    (Math.random() - 0.5) * (Math.random() * 0.05 + 0.01),
+                    (Math.random() - 0.5) * (Math.random() * 0.05 + 0.01)
+                );
+                velocities.push(velocity);
                 connections.push([]);
                 scene.add(node);
             }
@@ -65,7 +86,15 @@
                     if (!line) {
                         // Create a new line if it doesn't exist
                         const lineGeometry = new THREE.BufferGeometry().setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
-                        const lineMaterial = new THREE.LineBasicMaterial({ color: lineColor, transparent: true, opacity: 0.7 });
+                        const lineMaterial = new THREE.LineBasicMaterial({ 
+                            color: lineColor,
+                            transparent: true,
+                            opacity: 1.0,
+                            linewidth: 2, // Thickness of the line
+                            depthTest: false, // Prevent overlap covering
+                            depthWrite: false, // Prevent overlap covering
+                            emissive: lineColor // Makes the line "glow"
+                        });
                         line = new THREE.LineSegments(lineGeometry, lineMaterial);
                         line.startIndex = i;
                         line.endIndex = j;
@@ -112,28 +141,107 @@
             return distances.slice(0, n).map(d => d.index);
         }
 
+        let targetRotationX = 0;
+        let targetRotationY = 0;
+        const rotationSpeed = 0.05; // Speed of scene rotation
+
+        let targetScale = 1;
+        const scaleSpeed = 0.2; // Speed of node scaling
+        const scaleLerpSpeed = 0.05; // Speed at which nodes scale back to the target size
+
+        let touchStartX = 0;
+        let touchStartY = 0;
+        let isTouching = false;
+        let isSwiping = false;
+
+        window.addEventListener('mousedown', (event) => {
+            isTouching = true;
+            isSwiping = false;  // Reset swipe state
+            touchStartX = event.clientX;
+            touchStartY = event.clientY;
+        });
+
+        window.addEventListener('mousemove', (event) => {
+            if (isTouching) {
+                const deltaX = event.clientX - touchStartX;
+                const deltaY = event.clientY - touchStartY;
+
+                if (Math.abs(deltaX) > Math.abs(deltaY)) {
+                    // Left-right swipe
+                    if (deltaX > 0) {
+                        // Swipe right
+                        targetRotationY -= 0.1; // Rotate scene to the right
+                    } else {
+                        // Swipe left
+                        targetRotationY += 0.1; // Rotate scene to the left
+                    }
+                } else {
+                    // Up-down swipe
+                    if (deltaY > 0) {
+                        // Swipe down
+                        targetRotationX -= 0.1; // Rotate scene down
+                    } else {
+                        // Swipe up
+                        targetRotationX += 0.1; // Rotate scene up
+                    }
+                }
+
+                // If swipe is detected, flag it and stop hover behavior
+                isSwiping = true;
+                touchStartX = event.clientX;
+                touchStartY = event.clientY;
+            }
+
+            // Handle hover behavior only if not swiping
+            if (!isSwiping) {
+                const mouseX = (event.clientX / window.innerWidth) * 2 - 1;
+                const mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
+
+                // Smoothly map mouse position to scene rotation
+                targetRotationX = mouseY * Math.PI; // Vertical rotation
+                targetRotationY = mouseX * Math.PI; // Horizontal rotation
+            }
+        });
+
+        window.addEventListener('mouseup', () => {
+            isTouching = false;
+            isSwiping = false;  // Reset swipe state
+        });
+
+        function updateSceneRotation() {
+            scene.rotation.x += (targetRotationX - scene.rotation.x) * rotationSpeed;
+            scene.rotation.y += (targetRotationY - scene.rotation.y) * rotationSpeed;
+
+            // Smooth scaling effect on nodes using lerp (linear interpolation)
+            nodes.forEach(node => {
+                node.scale.set(
+                    THREE.MathUtils.lerp(node.scale.x, targetScale, scaleLerpSpeed),
+                    THREE.MathUtils.lerp(node.scale.y, targetScale, scaleLerpSpeed),
+                    THREE.MathUtils.lerp(node.scale.z, targetScale, scaleLerpSpeed)
+                ); // Smoothly interpolate between current scale and target scale
+            });
+        }
+
         function animate() {
             requestAnimationFrame(animate);
 
-            // Slowly expand the scene by moving nodes outward
+            // Move nodes with their respective velocities
             nodes.forEach((node, i) => {
                 node.position.add(velocities[i]);
 
+                // Add boundary checks for nodes to bounce within the scene
                 if (Math.abs(node.position.x) > 5) velocities[i].x = -velocities[i].x;
                 if (Math.abs(node.position.y) > 5) velocities[i].y = -velocities[i].y;
                 if (Math.abs(node.position.z) > 5) velocities[i].z = -velocities[i].z;
 
                 // Adjust node transparency based on distance from camera
                 const distance = node.position.distanceTo(camera.position);
-                const opacity = Math.max(0.1, 1 - distance / 20);  // Clamp opacity between 0.1 and 1
+                const maxDistance = 20;
+                const opacity = Math.max(0.1, 1 - distance / maxDistance); // Clamp opacity between 0.1 and 1
                 node.material.opacity = opacity;
             });
 
-            // Slow rotation of the entire scene
-            scene.rotation.x += 0.0005;
-            scene.rotation.y += 0.0003;
-
-            // Update line transparency based on distance
+            // Update line transparency based on distance from camera
             lines.forEach(line => {
                 const distStart = nodes[line.startIndex].position.distanceTo(camera.position);
                 const distEnd = nodes[line.endIndex].position.distanceTo(camera.position);
@@ -142,6 +250,7 @@
                 line.material.opacity = opacity;
             });
 
+            updateSceneRotation();
             updateConnections();
             renderer.render(scene, camera);
         }
