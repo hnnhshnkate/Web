@@ -12,75 +12,93 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HSKP</title>
-    <!-- Importing Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Roboto:wght@400;500&family=Quattrocento:wght@400&display=swap" rel="stylesheet">
     
     <style>
-        /* Full-screen background iframe */
         #background {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: 0; /* Ensure it's below other content */
-            pointer-events: auto; /* Allow interaction with the iframe */
+            z-index: 0;
+            pointer-events: none;  /* Make sure the background doesn't block interactions */
             border: none;
         }
 
-        /* Header styles */
         .header {
-            position: fixed;
+            position: relative; /* Relative positioning for overlay */
             top: 0;
             width: 100%;
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 10px 20px;
-            background-color: black; /* Solid black background */
+            background: linear-gradient(90deg, red, orange, yellow, green, blue, indigo, violet);
+            background-size: 400% 400%;
+            animation: gradientAnimation 30s ease-in-out infinite;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             color: white;
             z-index: 2;
-            box-sizing: border-box; /* Ensure padding is included in the width */
-            transition: all 0.3s ease;
+            box-sizing: border-box;
+            transition: all 0.3s ease-in-out;
+            opacity: 1;
         }
 
-        /* Set Roboto as the default font for body */
+        /* Overlay to reduce the intensity of the gradient */
+        .header::before { 
+            content: ''; /* Create a pseudo-element */
+            position: absolute; /* Position it over the gradient */
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4); /* Semi-transparent black overlay */
+            z-index: -1; /* Place it behind the text */
+        }
+
+        @keyframes gradientAnimation {
+            0% { background-position: 0% 50%; }
+            20% { background-position: 50% 0%; }
+            40% { background-position: 100% 50%; }
+            60% { background-position: 50% 100%; }
+            80% { background-position: 0% 100%; }
+            100% { background-position: 0% 50%; }
+        }
+
         body {
             font-family: 'Roboto', sans-serif;
             margin: 0;
             padding: 0;
         }
 
-        /* Set Poppins for headings */
         .header .name,
         .header .abbreviated-name {
-            font-family: 'Quattrocento', serif; /* Apply Quattrocento font for name */
-            font-size: 2em;
+            font-family: 'Quattrocento', serif;
+            font-size: 2.5em;
             font-weight: bold;
-            padding-left: 10px; /* Reduced padding */
-            white-space: nowrap; /* Prevent name from wrapping */
-            display: inline-block; /* Allow both names to fit inline */
-            opacity: 0; /* Make names invisible initially */
-            transition: opacity 0.3s ease; /* Smooth fade-in */
+            padding-left: 10px;
+            white-space: nowrap;
+            display: inline-block;
+            opacity: 0;
+            transition: opacity 0.3s ease;
         }
 
         .header .abbreviated-name {
-            display: none; /* Hide the abbreviated name by default */
+            display: none;
         }
 
         .header .title {
-            font-family: 'Poppins', sans-serif; /* Use Poppins for the title */
+            font-family: 'Poppins', sans-serif;
             margin-top: 5px;
-            font-size: 1em;
-            padding-left: 10px; /* Reduced padding */
+            font-size: em;
+            padding-left: 10px;
         }
 
-        /* Navigation styles */
         .header .nav {
             display: flex;
             gap: 20px;
-            padding-right: 20px; /* Reduced right padding */
+            padding-right: 20px;
         }
 
         .header .nav a {
@@ -88,29 +106,26 @@
             text-decoration: none;
             font-size: 1em;
             padding: 10px;
-            border-radius: 5px; /* Slightly rounded corners */
-            transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease; /* Add transition for background color, text color, and box shadow */
+            border-radius: 5px;
+            transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
         }
 
-        /* Hover effect on navigation links */
         .header .nav a:hover,
         .header .nav a:active {
-            background-color: #f39c12; /* Background color when hovered */
-            color: #2c3e50; /* Dark text when hovered */
-            box-shadow: 0 0 8px rgba(0, 0, 0, 0.2); /* Adds shadow when active */
-            border-radius: 8px; /* Subtly round the corners */
+            background-color: #EEEE;
+            color: black;
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
         }
 
-        /* More visible press effect for navigation links */
         .header .nav a:active {
-            background-color: #e67e22; /* Slightly darker shade when pressed */
-            color: #34495e; /* Darker text when pressed */
-            box-shadow: 0 0 12px rgba(0, 0, 0, 0.3); /* Slightly more pronounced shadow on press */
+            background-color: #e67e22;
+            color: #34495e;
+            box-shadow: 0 0 12px rgba(0, 0, 0, 0.3);
         }
 
-        /* Hamburger menu styles */
         .hamburger {
-            display: none; /* Hide hamburger icon by default */
+            display: none;
             cursor: pointer;
             flex-direction: column;
             gap: 4px;
@@ -124,95 +139,91 @@
             transition: all 0.3s ease;
         }
 
-        /* More visible press effect for hamburger */
         .hamburger:active div {
-            transform: scale(0.8); /* Shrinks the hamburger lines more */
-            background-color: #f39c12; /* Changes color on press */
+            transform: scale(0.8);
+            background-color: #f39c12;
         }
 
-        /* Close button in hamburger */
         .close-btn {
-            display: none; /* Hidden by default */
+            display: none;
             cursor: pointer;
             font-size: 2em;
             color: white;
             position: absolute;
             top: 10px;
             right: 10px;
-            padding: 10px; /* Added padding for extra space around the X */
+            padding: 10px;
             transition: all 0.3s ease;
         }
 
-        /* More visible press effect for close button */
         .close-btn:active {
-            transform: scale(0.8); /* Shrinks the close button */
-            color: #f39c12; /* Changes color on press */
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.4); /* Adds shadow on press */
+            transform: scale(0.8);
+            color: #f39c12;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
         }
 
-        /* Ensure the close button doesn’t overlap with the links */
         .nav.open .close-btn {
             display: block;
             position: absolute;
             top: 10px;
-            right: 10px; /* Keeps it in the top-right corner */
+            right: 10px;
             font-size: 2em;
             color: white;
-            z-index: 10; /* Ensure the close button is always above the content */
-            padding: 12px; /* Padding to add space around the 'X' button */
+            z-index: 10;
+            padding: 12px;
         }
 
-        /* Show hamburger icon when window is less than 480px */
         @media (max-width: 480px) {
             .header .nav {
-                display: none; /* Hide the normal navigation menu */
+                display: none;
             }
 
             .hamburger {
-                display: flex; /* Show hamburger icon */
+                display: flex;
             }
         }
 
-        /* Show nav when hamburger menu is clicked */
         .nav.open {
             display: block;
             position: absolute;
             top: 50px;
             right: 0;
-            background-color: black; /* Set black background for the dropdown */
+            background-color: black;
             width: 100%;
             padding: 10px;
             text-align: center;
             z-index: 3;
-            height: auto; /* Let the height adjust based on the content */
+            height: auto;
             box-sizing: border-box;
-            padding-bottom: 20px; /* Padding at the bottom */
+            padding-bottom: 20px;
         }
 
         .nav.open a {
             display: block;
             margin: 10px 0;
             font-size: 1.2em;
-            color: white; /* Ensures links are white in the dropdown */
+            color: white;
         }
 
-        /* Add extra padding to the 'My Blogs' link when the menu is open */
         .nav.open .nav-blogs {
-            padding-top: 12px; /* Adjusted padding to balance the space */
+            padding-top: 12px;
         }
+
+        /* Fix for the name disappearing */
+        .header .name, .header .abbreviated-name {
+            opacity: 1 !important;  /* Force name to remain visible */
+        }
+
     </style>
 </head>
 <body>
 
-    <!-- Embed the background.html as an iframe -->
-    <iframe id="background" src="background.html" frameborder="0"></iframe>
+    <!-- Embed the background iframe -->
+    <iframe id="background" src="background.html" frameborder="0" allowfullscreen></iframe>
 
-    <!-- Header with name, title, and navigation links -->
     <div class="header">
         <div>
-            <!-- Full name -->
             <div class="name">Hannah S.K. Pahama</div>
-            <!-- Abbreviated name -->
             <div class="abbreviated-name">HSKP</div>
             <div class="title">Data Scientist</div>
         </div>
@@ -220,12 +231,10 @@
             <a href="#blogs" class="nav-blogs">My Blogs</a>
             <a href="#portfolio" class="nav-portfolio">Portfolio</a>
             <a href="#contact" class="nav-contact">Contact details</a>
-            <a href="#skillset" class="nav-skillset">Skillset</a> <!-- New link for Skillset -->
-            <!-- Close button inside the nav (only visible when the menu is open) -->
+            <a href="#skillset" class="nav-skillset">Skillset</a>
             <div class="close-btn" onclick="closeMenu()">×</div>
         </div>
 
-        <!-- Hamburger icon -->
         <div class="hamburger" onclick="toggleMenu()">
             <div></div>
             <div></div>
@@ -234,7 +243,6 @@
     </div>
 
     <script>
-        // Function to adjust name and nav labels display based on available space
         function adjustDisplay() {
             const header = document.querySelector('.header');
             const name = document.querySelector('.name');
@@ -245,43 +253,39 @@
             const navSkillset = document.querySelector('.nav-skillset');
             const headerWidth = header.offsetWidth;
 
-            // If the full name doesn't fit, show abbreviated version
-            if (headerWidth <= 960) { // When width is 960px or smaller
+            if (headerWidth <= 960) {
                 name.style.display = 'none';
                 abbreviatedName.style.display = 'block';
-                // Shorten navigation labels
                 navBlogs.textContent = 'Blogs';
                 navPortfolio.textContent = 'Portfolio';
                 navContact.textContent = 'Contact';
-                navSkillset.textContent = 'Skills'; // Shorten Skillset to Skill
-                abbreviatedName.style.opacity = 1; // Fade in the abbreviated name
+                navSkillset.textContent = 'Skills';
+                abbreviatedName.style.opacity = 1;
             } else {
                 name.style.display = 'block';
                 abbreviatedName.style.display = 'none';
-                // Full navigation labels
                 navBlogs.textContent = 'My Blogs';
                 navPortfolio.textContent = 'Portfolio';
-                navContact.textContent = 'Contact Info';
-                navSkillset.textContent = 'Skillset'; // Full label for Skillset
-                name.style.opacity = 1; // Fade in the full name
+                navContact.textContent = 'Contact details';
+                navSkillset.textContent = 'Skillset';
+                name.style.opacity = 1;
             }
         }
 
-        // Function to toggle the navigation menu (hamburger)
+        window.addEventListener('resize', adjustDisplay);
+        window.addEventListener('load', adjustDisplay);
+
         function toggleMenu() {
             const nav = document.querySelector('.nav');
+            const hamburger = document.querySelector('.hamburger');
             nav.classList.toggle('open');
+            hamburger.classList.toggle('open');
         }
 
-        // Function to close the navigation menu
         function closeMenu() {
             const nav = document.querySelector('.nav');
             nav.classList.remove('open');
         }
-
-        // Run on page load and on window resize
-        window.addEventListener('load', adjustDisplay);
-        window.addEventListener('resize', adjustDisplay);
     </script>
 
 </body>
