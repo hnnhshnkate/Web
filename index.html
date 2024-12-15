@@ -1,9 +1,7 @@
 <!--  
- * Copyright (c) 2024 Hannah Pahama
- * All rights reserved.
- *
+ * © 2024 Hannah Pahama. All rights reserved.
  * This code is licensed under the MIT License.
- * See the LICENSE file for more information.
+ * Feel free to check out the LICENSE file for more info. Enjoy exploring!
 -->
 
 <!DOCTYPE html>
@@ -11,7 +9,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HSKP</title>
+    <title>Welcome to My Digital World!</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
     
     <style>
@@ -22,12 +20,12 @@
             width: 100%;
             height: 100%;
             z-index: 0;
-            pointer-events: auto;  /* Make sure the background doesn't block interactions */
+            pointer-events: auto;
             border: none;
         }
 
         .header {
-            position: relative; /* Relative positioning for overlay */
+            position: relative;
             top: 0;
             width: 100%;
             display: flex;
@@ -45,16 +43,15 @@
             opacity: 1;
         }
 
-        /* Overlay to reduce the intensity of the gradient */
         .header::before { 
-            content: ''; /* Create a pseudo-element */
-            position: absolute; /* Position it over the gradient */
+            content: '';
+            position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.65); /* More transparent overlay */
-            z-index: -1; /* Place it behind the text */
+            background: rgba(0, 0, 0, 0.65);
+            z-index: -1;
         }
 
         @keyframes gradientAnimation {
@@ -114,14 +111,14 @@
         }
 
         .header .nav a:hover {
-            background-color: #EEE;
-            color: black;
+            background-color: #ffb74d;
+            color: white;
             box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
         }
 
         .header .nav a:active {
-            background-color: #e67e22;
-            color: #34495e;
+            background-color: #f57c00;
+            color: white;
             box-shadow: 0 0 12px rgba(0, 0, 0, 0.3);
         }
 
@@ -134,15 +131,16 @@
         }
 
         .hamburger div {
-            width: 25px;
-            height: 3px;
-            background-color: white;
+            width: 30px;
+            height: 4px;
+            background-color: #f39c12;
+            border-radius: 4px;
             transition: all 0.3s ease;
         }
 
-        .hamburger:active div {
-            transform: scale(0.8);
-            background-color: #f39c12;
+        .hamburger:hover div {
+            transform: scale(1.1);
+            background-color: #f57c00;
         }
 
         .close-btn {
@@ -210,9 +208,8 @@
             padding-top: 12px;
         }
 
-        /* Fix for the name disappearing */
         .header .name, .header .abbreviated-name {
-            opacity: 1 !important;  /* Force name to remain visible */
+            opacity: 1 !important;
         }
     </style>
 </head>
@@ -225,13 +222,13 @@
         <div>
             <div class="name">Hannah S.K. Pahama</div>
             <div class="abbreviated-name">HSKP</div>
-            <div class="title">Data Scientist</div>
+            <div class="title">Welcome to My Digital Data World!</div>
         </div>
         <div class="nav">
-            <a href="#blogs" class="nav-blogs">My Blogs</a>
-            <a href="#portfolio" class="nav-portfolio">Portfolio</a>
-            <a href="#contact" class="nav-contact">Contact details</a>
-            <a href="#skillset" class="nav-skillset">Skillset</a>
+            <a href="#blogs" class="nav-blogs">Check Out My Blogs</a>
+            <a href="#portfolio" class="nav-portfolio">Explore My Portfolio</a>
+            <a href="#contact" class="nav-contact">Let's Connect</a>
+            <a href="#skillset" class="nav-skillset">My Skillset</a>
             <div class="close-btn" onclick="closeMenu()">×</div>
         </div>
 
@@ -264,10 +261,10 @@
             } else {
                 name.style.display = 'block';
                 abbreviatedName.style.display = 'none';
-                navBlogs.textContent = 'My Blogs';
-                navPortfolio.textContent = 'Portfolio';
-                navContact.textContent = 'Contact details';
-                navSkillset.textContent = 'Skillset';
+                navBlogs.textContent = 'Check Out My Blogs';
+                navPortfolio.textContent = 'Explore My Portfolio';
+                navContact.textContent = 'Let\'s Connect';
+                navSkillset.textContent = 'My Skillset';
                 name.style.opacity = 1;
             }
         }
@@ -289,5 +286,6 @@
             hamburger.classList.remove('active');
         }
     </script>
+
 </body>
 </html>
