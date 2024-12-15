@@ -1,4 +1,4 @@
-<!-- 
+<!--  
  * Copyright (c) 2024 Hannah Pahama
  * All rights reserved.
  *
@@ -12,7 +12,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HSKP</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Roboto:wght@400;500&family=Quattrocento:wght@400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
     
     <style>
         #background {
@@ -68,15 +68,17 @@
 
         body {
             font-family: 'Roboto', sans-serif;
+            line-height: 1.6;
+            letter-spacing: 0.5px;
             margin: 0;
             padding: 0;
         }
 
-        .header .name,
+        .header .name, 
         .header .abbreviated-name {
-            font-family: 'Quattrocento', serif;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
             font-size: 2.5em;
-            font-weight: bold;
             padding-left: 10px;
             white-space: nowrap;
             display: inline-block;
@@ -90,8 +92,8 @@
 
         .header .title {
             font-family: 'Poppins', sans-serif;
-            margin-top: 5px;
-            font-size: em;
+            font-weight: 400;
+            font-size: 1.5em;
             padding-left: 10px;
         }
 
@@ -102,6 +104,7 @@
         }
 
         .header .nav a {
+            font-family: 'Roboto', sans-serif;
             color: white;
             text-decoration: none;
             font-size: 1em;
@@ -110,12 +113,10 @@
             transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
         }
 
-        .header .nav a:hover,
-        .header .nav a:active {
-            background-color: #EEEE;
+        .header .nav a:hover {
+            background-color: #EEE;
             color: black;
             box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
-            border-radius: 8px;
         }
 
         .header .nav a:active {
@@ -213,7 +214,6 @@
         .header .name, .header .abbreviated-name {
             opacity: 1 !important;  /* Force name to remain visible */
         }
-
     </style>
 </head>
 <body>
@@ -279,14 +279,15 @@
             const nav = document.querySelector('.nav');
             const hamburger = document.querySelector('.hamburger');
             nav.classList.toggle('open');
-            hamburger.classList.toggle('open');
+            hamburger.classList.toggle('active');
         }
 
         function closeMenu() {
             const nav = document.querySelector('.nav');
+            const hamburger = document.querySelector('.hamburger');
             nav.classList.remove('open');
+            hamburger.classList.remove('active');
         }
     </script>
-
 </body>
 </html>
