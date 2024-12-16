@@ -4,6 +4,12 @@
  * Feel free to check out the LICENSE file for more info. Enjoy exploring!
 -->
 
+<!--  
+ * © 2024 Hannah Pahama. All rights reserved.
+ * This code is licensed under the MIT License.
+ * Feel free to check out the LICENSE file for more info. Enjoy exploring!
+-->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -211,14 +217,27 @@
         .header .name, .header .abbreviated-name {
             opacity: 1 !important;
         }
+
+        /* Add gradient bottom overlay with smoother transition */
+        .bottom-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 33%; /* Covers the bottom third */
+            background: linear-gradient(to top, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.4) 50%, rgba(0, 0, 0, 0) 100%); /* Smooth ombre */
+            z-index: 1;
+        }
+
     </style>
 </head>
 <body>
 
     <!-- Embed the background iframe -->
-    <!-- New addition to display background in its own file -->
     <iframe id="background" src="background.html" frameborder="0" allowfullscreen></iframe>
-    <!-- End of new addition -->
+
+    <!-- Bottom overlay for gradient effect -->
+    <div class="bottom-overlay"></div>
 
     <div class="header">
         <div>
