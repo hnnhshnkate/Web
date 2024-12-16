@@ -89,7 +89,7 @@
         .header .abbreviated-name {
             font-family: 'Poppins', sans-serif;
             font-weight: 600;
-            font-size: 2.5em;
+            font-size: 4em;
             padding-left: 10px;
             white-space: nowrap;
             display: inline-block;
@@ -104,8 +104,9 @@
         .header .title {
             font-family: 'Poppins', sans-serif;
             font-weight: 400;
-            font-size: 1.5em;
+            font-size: 1.2em;
             padding-left: 10px;
+            padding-top: -2px; /* Adjust this value to increase or decrease the space */
         }
 
         .header .nav {
@@ -149,14 +150,14 @@
         .hamburger div {
             width: 30px;
             height: 4px;
-            background-color: #f39c12;
+            background-color: white;
             border-radius: 4px;
             transition: all 0.3s ease;
         }
 
         .hamburger:hover div {
             transform: scale(1.1);
-            background-color: #f57c00;
+            background-color: yellow;
         }
 
         .close-btn {
@@ -188,13 +189,14 @@
             padding: 12px;
         }
 
-        @media (max-width: 1024px) {
+        @media (max-width: 1050px) {
             .header .nav {
                 display: none;
             }
 
             .hamburger {
                 display: flex;
+    		padding-right: 20px; /* Adjust this value to move it to the right */
             }
         }
 
@@ -218,6 +220,43 @@
             margin: 10px 0;
             font-size: 1.2em;
             color: white;
+        }
+
+        /* Hover effects for links inside the open nav (under hamburger) */
+        .nav.open .nav-blogs:hover {
+            background-color: red;
+            color: black;
+        }
+
+        .nav.open .nav-portfolio:hover {
+            background-color: orange;
+            color: black;
+        }
+
+        .nav.open .nav-contact:hover {
+            background-color: blue;
+            color: black;
+        }
+
+        .nav.open .nav-skillset:hover {
+            background-color: violet;
+            color: black;
+        }
+
+        /* General hover effect when any link is hovered inside the open nav */
+        .nav.open a:hover,
+        .nav.open a:active {
+            background-color: #EEEE;
+            color: black;
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+        }
+
+        /* Active state for links inside the open nav */
+        .nav.open a:active {
+            background-color: #f57c00;
+            color: white;
+            box-shadow: 0 0 12px rgba(0, 0, 0, 0.3);
         }
 
         /* Show the full name when the window is wide enough */
