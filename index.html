@@ -1,15 +1,3 @@
-<!--  
- * © 2024 Hannah Pahama. All rights reserved.
- * This code is licensed under the MIT License.
- * Feel free to check out the LICENSE file for more info. Enjoy exploring!
--->
-
-<!--  
- * © 2024 Hannah Pahama. All rights reserved.
- * This code is licensed under the MIT License.
- * Feel free to check out the LICENSE file for more info. Enjoy exploring!
--->
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -71,8 +59,6 @@
 
         body {
             font-family: 'Roboto', sans-serif;
-            line-height: 1.6;
-            letter-spacing: 0.5px;
             margin: 0;
             padding: 0;
         }
@@ -116,10 +102,12 @@
             transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
         }
 
-        .header .nav a:hover {
-            background-color: #ffb74d;
-            color: white;
+        .header .nav a:hover,
+        .header .nav a:active {
+            background-color: #EEEE;
+            color: black;
             box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
         }
 
         .header .nav a:active {
@@ -178,7 +166,8 @@
             padding: 12px;
         }
 
-        @media (max-width: 480px) {
+        /* Update: Collapse navbar links into hamburger at 50% screen width */
+        @media (max-width: 1024px) {
             .header .nav {
                 display: none;
             }
@@ -188,6 +177,7 @@
             }
         }
 
+        /* Adjust visibility when hamburger menu is active */
         .nav.open {
             display: block;
             position: absolute;
@@ -210,22 +200,18 @@
             color: white;
         }
 
-        .nav.open .nav-blogs {
-            padding-top: 12px;
-        }
-
         .header .name, .header .abbreviated-name {
             opacity: 1 !important;
         }
 
-        /* Add gradient bottom overlay with smoother transition */
+        /* Ombre Transparent to Black Overlay */
         .bottom-overlay {
             position: absolute;
             bottom: 0;
             left: 0;
             width: 100%;
-            height: 70%; /* Covers the bottom third */
-            background: linear-gradient(to top, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.4) 50%, rgba(0, 0, 0, 0) 100%); /* Smooth ombre */
+            height: 50%; /* Covers the bottom 50% */
+            background: linear-gradient(to top, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0) 100%); /* Ombre effect */
             z-index: 1;
         }
 
@@ -261,14 +247,11 @@
     </div>
 
     <script>
+        // Adjust display when the window is resized
         function adjustDisplay() {
             const header = document.querySelector('.header');
             const name = document.querySelector('.name');
             const abbreviatedName = document.querySelector('.abbreviated-name');
-            const navBlogs = document.querySelector('.nav-blogs');
-            const navPortfolio = document.querySelector('.nav-portfolio');
-            const navContact = document.querySelector('.nav-contact');
-            const navSkillset = document.querySelector('.nav-skillset');
             const headerWidth = header.offsetWidth;
 
             if (headerWidth <= 960) {
@@ -283,6 +266,7 @@
         window.addEventListener('resize', adjustDisplay);
         window.addEventListener('load', adjustDisplay);
 
+        // Toggle menu visibility
         function toggleMenu() {
             const nav = document.querySelector('.nav');
             nav.classList.toggle('open');
