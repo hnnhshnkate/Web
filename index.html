@@ -15,15 +15,28 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
     
     <style>
+        /* Fix the background iframe to stay behind everything */
         #background {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: 0;
-            pointer-events: auto;
+            z-index: -1; /* Keep it behind other elements */
+            pointer-events: none; /* Make it non-interactive */
             border: none;
+        }
+
+        /* Bottom overlay for gradient effect */
+        .bottom-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 70%; /* Covers the bottom 70% */
+            background: linear-gradient(to top, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0) 100%);
+            z-index: 1; /* Ensure it overlays the background */
+            pointer-events: none; /* Prevent it from blocking background hover or click */
         }
 
         .header {
@@ -43,17 +56,6 @@
             box-sizing: border-box;
             transition: all 0.3s ease-in-out;
             opacity: 1;
-        }
-
-        .header::before { 
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.65);
-            z-index: -1;
         }
 
         @keyframes gradientAnimation {
@@ -174,7 +176,6 @@
             padding: 12px;
         }
 
-        /* Update: Collapse navbar links into hamburger at 50% screen width */
         @media (max-width: 1024px) {
             .header .nav {
                 display: none;
@@ -185,7 +186,6 @@
             }
         }
 
-        /* Adjust visibility when hamburger menu is active */
         .nav.open {
             display: block;
             position: absolute;
@@ -208,27 +208,11 @@
             color: white;
         }
 
+        /* Show the full name when the window is wide enough */
         .header .name, .header .abbreviated-name {
             opacity: 1 !important;
         }
-
-    <style>
-     
-    <style>
-        /* Bottom overlay for gradient effect */
-        .bottom-overlay {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 70%; /* Covers the bottom 70% */
-            background: linear-gradient(to top, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0) 100%);
-            z-index: 1; /* Ensure it overlays the background */
-            pointer-events: none; /* Prevent it from blocking background hover or click */
-        }
     </style>
-    </style>
-
 </head>
 <body>
 
@@ -238,6 +222,7 @@
     <!-- Bottom overlay for gradient effect -->
     <div class="bottom-overlay"></div>
 
+    <!-- Header section -->
     <div class="header">
         <div>
             <div class="name">HSKP</div>
