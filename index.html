@@ -15,6 +15,16 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
     
     <style>
+        /* Prevent text selection */
+        body {
+            user-select: none;
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4; /* Light beige */
+            color: #333; /* Darker text color for readability */
+        }
+
         /* Fix the background iframe to stay behind everything */
         #background {
             position: fixed;
@@ -55,14 +65,6 @@
             pointer-events: none;
         }
 
-        body {
-            font-family: 'Roboto', sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f4f4; /* Light beige */
-            color: #333; /* Darker text color for readability */
-        }
-
         .name-container {
             display: flex;
             align-items: center;
@@ -86,7 +88,7 @@
             display: inline-block;
             opacity: 1;
             transition: opacity 0.3s ease;
-            color: #FFFFF; /*
+            color: #FFFFF;
         }
 
         .header .abbreviated-name {
@@ -238,7 +240,7 @@
             <div class="abbreviated-name">HSKP</div>
         </div>
         <div class="nav">
-	    <a href="blogs.html" class="nav-blogs">My Blogs</a>
+            <a href="blogs.html" class="nav-blogs">My Blogs</a>
             <a href="portfolio.html" class="nav-portfolio">Explore My Portfolio</a>
             <a href="contact.html" class="nav-contact">Let's Connect</a>
             <a href="skillset.html" class="nav-skillset">My Skillset</a>
@@ -300,6 +302,17 @@
 
         // Initialize display based on window width
         adjustDisplay();
+
+        // Prevent right-click context menu
+        document.addEventListener('contextmenu', function(event) {
+            event.preventDefault();
+        });
+
+        // Prevent copy event
+        document.addEventListener('copy', function(event) {
+            event.preventDefault();
+            alert("Copying is disabled.");
+        });
     </script>
 
 </body>
