@@ -216,7 +216,9 @@
 <body>
 
     <!-- Embed the background iframe -->
+    <!-- New addition to display background in its own file -->
     <iframe id="background" src="background.html" frameborder="0" allowfullscreen></iframe>
+    <!-- End of new addition -->
 
     <div class="header">
         <div>
@@ -253,19 +255,9 @@
             if (headerWidth <= 960) {
                 name.style.display = 'none';
                 abbreviatedName.style.display = 'block';
-                navBlogs.textContent = 'Blogs';
-                navPortfolio.textContent = 'Portfolio';
-                navContact.textContent = 'Contact';
-                navSkillset.textContent = 'Skills';
-                abbreviatedName.style.opacity = 1;
             } else {
                 name.style.display = 'block';
                 abbreviatedName.style.display = 'none';
-                navBlogs.textContent = 'Check Out My Blogs';
-                navPortfolio.textContent = 'Explore My Portfolio';
-                navContact.textContent = 'Let\'s Connect';
-                navSkillset.textContent = 'My Skillset';
-                name.style.opacity = 1;
             }
         }
 
@@ -274,16 +266,12 @@
 
         function toggleMenu() {
             const nav = document.querySelector('.nav');
-            const hamburger = document.querySelector('.hamburger');
             nav.classList.toggle('open');
-            hamburger.classList.toggle('active');
         }
 
         function closeMenu() {
             const nav = document.querySelector('.nav');
-            const hamburger = document.querySelector('.hamburger');
             nav.classList.remove('open');
-            hamburger.classList.remove('active');
         }
     </script>
 
