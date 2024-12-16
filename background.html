@@ -30,6 +30,9 @@
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer({ antialias: true });
+
+        // Update the renderer pixel ratio for better display on high-DPI devices (like retina displays)
+        renderer.setPixelRatio(window.devicePixelRatio);
         renderer.setSize(window.innerWidth, window.innerHeight);
         document.body.appendChild(renderer.domElement);
 
@@ -61,16 +64,23 @@
                 const material = new THREE.MeshStandardMaterial({ 
                     color, 
                     emissive: color, 
-                    metalness: 0.5,  // Adds shiny surface
-                    roughness: 0.3   // Adds roughness to simulate a non-perfect surface
+                    emissiveIntensity: 1.5,  // Increase emissive intensity
+                    metalness: 0.5, 
+                    roughness: 0.3   
                 });
+
                 const node = new THREE.Mesh(geometry, material);
                 node.position.set(Math.random() * 10 - 5, Math.random() * 10 - 5, Math.random() * 10 - 5);
                 nodes.push(node);
 
-                // Assigning a random velocity for varied movement
+                // Add point light at each node
+                const pointLight = new THREE.PointLight(color, 1, 5);  // Light intensity, distance
+                pointLight.position.set(node.position.x, node.position.y, node.position.z);
+                scene.add(pointLight);
+
+                // Assigning a random velocity for movement
                 const velocity = new THREE.Vector3(
-                    (Math.random() - 0.5) * (Math.random() * 0.05 + 0.01), // Randomized speed factor
+                    (Math.random() - 0.5) * (Math.random() * 0.05 + 0.01), 
                     (Math.random() - 0.5) * (Math.random() * 0.05 + 0.01),
                     (Math.random() - 0.5) * (Math.random() * 0.05 + 0.01)
                 );
@@ -228,6 +238,7 @@
             const height = window.innerHeight;
 
             renderer.setSize(width, height);
+            renderer.setPixelRatio(window.devicePixelRatio);  // Adjust pixel ratio for high-DPI devices
             camera.aspect = width / height;
             camera.updateProjectionMatrix();
         });
