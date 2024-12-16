@@ -84,6 +84,19 @@
             padding: 0;
         }
 
+        /* Styling for the profile image */
+        .name-container {
+            display: flex;
+            align-items: center; /* Vertically centers the image and text */
+        }
+
+        .profile-img {
+            width: 50px;   /* Adjust size */
+            height: 50px;  /* Adjust size */
+            border-radius: 50%; /* Makes the image circular */
+            margin-right: 10px; /* Space between the image and the name */
+        }
+
         .header .name, 
         .header .abbreviated-name {
             font-family: 'Poppins', sans-serif;
@@ -187,7 +200,7 @@
 
             .hamburger {
                 display: flex;
-    		padding-right: 20px; /* Adjust this value to move it to the right */
+                padding-right: 20px; /* Adjust this value to move it to the right */
             }
         }
 
@@ -217,25 +230,25 @@
         .nav.open .nav-blogs:hover {
             background-color: red;
             color: black;
-	    opacity: 0.8;
+            opacity: 0.8;
         }
 
         .nav.open .nav-portfolio:hover {
             background-color: orange;
             color: black;
-	    opacity: 0.8;
+            opacity: 0.8;
         }
 
         .nav.open .nav-contact:hover {
             background-color: blue;
             color: black;
-	    opacity: 0.8;
+            opacity: 0.8;
         }
 
         .nav.open .nav-skillset:hover {
             background-color: violet;
             color: black;
-	    opacity: 0.8;
+            opacity: 0.8;
         }
 
         /* General hover effect when any link is hovered inside the open nav */
@@ -272,7 +285,8 @@
 
     <!-- Header section -->
     <div class="header">
-        <div>
+        <div class="name-container">
+            <img src="image.jpg" alt="Image" class="profile-img">
             <div class="name">HSKP</div>
             <div class="abbreviated-name">HSKP</div>
         </div>
