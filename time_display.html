@@ -1,0 +1,115 @@
+<!--
+ * Copyright (c) 2024 Hannah Pahama
+ * All rights reserved.
+ *
+ * This code is licensed under the MIT License.
+ * See the LICENSE file for more information.
+ -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Matrix Hacker Time & Date</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: transparent; /* Set background to transparent */
+      color: #00ffff; /* Changed to cyan */
+      font-family: 'Courier New', monospace; /* Hacker-like font */
+      font-size: 20px; /* Smaller font size */
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* Date, time, and runtime container */
+    .date-time-container {
+      position: absolute;
+      bottom: 10px; /* Distance from the bottom */
+      right: 10px; /* Distance from the right */
+      text-align: right;
+      display: flex;
+      flex-direction: column; /* Stack elements vertically */
+      gap: 2px; /* Further reduced gap for even closer spacing */
+    }
+
+    /* Ensure each line appears separately */
+    .line {
+      white-space: nowrap;
+      padding: 2px; /* Further reduced padding for even closer spacing */
+      letter-spacing: 1px; /* Slightly smaller letter spacing */
+      display: block; /* Force each line to be on its own row */
+    }
+
+    /* Matrix-style glowing cyan text */
+    .glitch {
+      font-weight: bold;
+      color: #00ffff; /* Changed to cyan */
+      text-shadow: 0 0 5px #00ffff, 0 0 10px #00ffff, 0 0 15px #00ffff; /* Glowing effect with cyan */
+    }
+
+    /* Runtime styling */
+    #runtime {
+      font-size: 18px;
+      opacity: 0.7;
+      display: block; /* Ensure runtime is on its own line */
+    }
+  </style>
+</head>
+<body>
+
+  <div class="date-time-container">
+    <div class="line" id="date-line">Loading Date...</div>
+    <div class="line" id="time-line">Loading Time...</div>
+    <div class="line" id="runtime">Runtime: 0s</div> <!-- Moved runtime here -->
+  </div>
+  
+  <script>
+    const dateLine = document.getElementById('date-line');
+    const timeLine = document.getElementById('time-line');
+    const runtimeLine = document.getElementById('runtime'); // Access runtime div
+
+    // Function to format the time with hours, minutes, seconds, and milliseconds
+    function formatTime(date) {
+      const hours = String(date.getHours()).padStart(2, '0');
+      const minutes = String(date.getMinutes()).padStart(2, '0');
+      const seconds = String(date.getSeconds()).padStart(2, '0');
+      const milliseconds = String(date.getMilliseconds()).padStart(3, '0');
+      return `${hours}:${minutes}:${seconds}:${milliseconds}`;
+    }
+
+    // Track the page load time
+    const pageLoadTime = Date.now();
+
+    // Function to update the time, date, and runtime
+    function updateDateTime() {
+      const now = new Date();
+      const dateString = now.toLocaleDateString();
+      const timeString = formatTime(now);
+      const elapsedTime = Math.floor((Date.now() - pageLoadTime) / 1000); // Calculate runtime in seconds
+
+      // Update date line
+      dateLine.textContent = dateString;
+
+      // Update time line
+      timeLine.textContent = timeString;
+
+      // Update runtime
+      runtimeLine.textContent = `Runtime: ${elapsedTime}s`;
+    }
+
+    // Update time, date, and runtime every 50ms for smooth updates
+    setInterval(updateDateTime, 50);
+
+    // Initial call to set the time and date when the page loads
+    updateDateTime();
+  </script>
+
+</body>
+</html>
