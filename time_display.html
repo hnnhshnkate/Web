@@ -19,7 +19,7 @@
       background-color: transparent; /* Set background to transparent */
       color: #FFFFFF; /* Set general text color to white */
       font-family: 'Courier New', monospace; /* Hacker-like font */
-      font-size: 20px; /* Smaller font size */
+      font-size: 16px; /* Smaller font size */
       height: 100vh;
       display: flex;
       justify-content: center;
@@ -36,13 +36,14 @@
       text-align: right;
       display: flex;
       flex-direction: column; /* Stack elements vertically */
-      gap: 2px; /* Further reduced gap for even closer spacing */
+      gap: 1px; /* Reduced gap for closer spacing */
+      line-height: 1.2; /* Reduced line spacing */
     }
 
     /* Ensure each line appears separately */
     .line {
       white-space: nowrap;
-      padding: 2px; /* Further reduced padding for even closer spacing */
+      padding: 1px; /* Reduced padding for closer spacing */
       letter-spacing: 1px; /* Slightly smaller letter spacing */
       display: block; /* Force each line to be on its own row */
       color: #FFFFFF; /* Ensure text is white */
@@ -57,7 +58,7 @@
 
     /* Runtime styling */
     #runtime {
-      font-size: 18px;
+      font-size: 14px; /* Smaller font size for runtime */
       opacity: 0.7;
       display: block; /* Ensure runtime is on its own line */
     }
