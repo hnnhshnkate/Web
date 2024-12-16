@@ -31,7 +31,6 @@
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer({ antialias: true });
 
-        // Update the renderer pixel ratio for better display on high-DPI devices (like retina displays)
         renderer.setPixelRatio(window.devicePixelRatio);
         renderer.setSize(window.innerWidth, window.innerHeight);
         document.body.appendChild(renderer.domElement);
@@ -50,12 +49,11 @@
             cyan: new THREE.Color(0, 1.0, 1.0)
         };
 
-        // Lighting setup
         const ambientLight = new THREE.AmbientLight(0x404040, 1); // Soft light
         scene.add(ambientLight);
 
         const pointLight = new THREE.PointLight(0xffffff, 1, 100); // Bright point light
-        pointLight.position.set(10, 10, 10); // Light position
+        pointLight.position.set(10, 10, 10);
         scene.add(pointLight);
 
         function createNodes() {
@@ -64,7 +62,7 @@
                 const material = new THREE.MeshStandardMaterial({ 
                     color, 
                     emissive: color, 
-                    emissiveIntensity: 1.5,  // Increase emissive intensity
+                    emissiveIntensity: 1.5, 
                     metalness: 0.5, 
                     roughness: 0.3   
                 });
@@ -73,12 +71,10 @@
                 node.position.set(Math.random() * 10 - 5, Math.random() * 10 - 5, Math.random() * 10 - 5);
                 nodes.push(node);
 
-                // Add point light at each node
-                const pointLight = new THREE.PointLight(color, 1, 5);  // Light intensity, distance
+                const pointLight = new THREE.PointLight(color, 1, 5);
                 pointLight.position.set(node.position.x, node.position.y, node.position.z);
                 scene.add(pointLight);
 
-                // Assigning a random velocity for movement
                 const velocity = new THREE.Vector3(
                     (Math.random() - 0.5) * (Math.random() * 0.05 + 0.01), 
                     (Math.random() - 0.5) * (Math.random() * 0.05 + 0.01),
@@ -92,7 +88,7 @@
 
         function updateConnections() {
             const thresholdDistance = 3;
-            const activeLines = new Set(); // Track the active lines to remove inactive ones
+            const activeLines = new Set();
 
             nodes.forEach((node, i) => {
                 connections[i] = [];
@@ -100,7 +96,6 @@
                 connections[i] = nearestNodes.length >= 8 ? nearestNodes.map(n => nodes.indexOf(n)) : findClosestNodes(i, 8);
             });
 
-            // Update lines and remove unused ones
             connections.forEach((conn, i) => {
                 conn.forEach(j => {
                     const positions = [...nodes[i].position.toArray(), ...nodes[j].position.toArray()];
@@ -108,16 +103,15 @@
 
                     let line = lines.find(l => (l.startIndex === i && l.endIndex === j) || (l.startIndex === j && l.endIndex === i));
                     if (!line) {
-                        // Create a new line if it doesn't exist
                         const lineGeometry = new THREE.BufferGeometry().setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
                         const lineMaterial = new THREE.LineBasicMaterial({ 
                             color: lineColor,
                             transparent: true,
                             opacity: 1.0,
-                            linewidth: 2, // Thickness of the line
-                            depthTest: false, // Prevent overlap covering
-                            depthWrite: false, // Prevent overlap covering
-                            emissive: lineColor // Makes the line "glow"
+                            linewidth: 2,
+                            depthTest: false,
+                            depthWrite: false,
+                            emissive: lineColor
                         });
                         line = new THREE.LineSegments(lineGeometry, lineMaterial);
                         line.startIndex = i;
@@ -125,22 +119,19 @@
                         lines.push(line);
                         scene.add(line);
                     } else {
-                        // Update the existing line geometry
                         const lineGeometry = line.geometry;
                         lineGeometry.attributes.position.array.set(positions);
                         lineGeometry.attributes.position.needsUpdate = true;
                     }
 
-                    // Mark this line as active
                     activeLines.add(line);
                 });
             });
 
-            // Remove lines that are no longer active
             lines.forEach(line => {
                 if (!activeLines.has(line)) {
                     scene.remove(line);
-                    lines = lines.filter(l => l !== line); // Remove it from the array as well
+                    lines = lines.filter(l => l !== line);
                 }
             });
         }
@@ -155,7 +146,7 @@
             if ((color1.equals(primaryColors[2]) && color2.equals(primaryColors[1])) || (color1.equals(primaryColors[1]) && color2.equals(primaryColors[2]))) {
                 return secondaryColors.cyan;
             }
-            return color1; // Same color nodes
+            return color1;
         }
 
         function findClosestNodes(nodeIndex, n) {
@@ -178,67 +169,64 @@
         let isTouching = false;
         let isSwiping = false;
 
+        // Smoothing mouse movement with requestAnimationFrame
+        let lastMoveTime = 0;
+        const moveInterval = 1000 / 60; // 60 FPS
+
         window.addEventListener('mousedown', (event) => {
             isTouching = true;
-            isSwiping = false;  // Reset swipe state
+            isSwiping = false;
             touchStartX = event.clientX;
             touchStartY = event.clientY;
         });
 
         window.addEventListener('mousemove', (event) => {
+            const now = Date.now();
+            if (now - lastMoveTime < moveInterval) return; // Limit the update rate
+            lastMoveTime = now;
+
             if (isTouching) {
                 const deltaX = event.clientX - touchStartX;
                 const deltaY = event.clientY - touchStartY;
 
                 if (Math.abs(deltaX) > Math.abs(deltaY)) {
-                    // Left-right swipe
                     if (deltaX > 0) {
-                        // Swipe right
                         targetRotationY -= 0.1; // Rotate scene to the right
                     } else {
-                        // Swipe left
                         targetRotationY += 0.1; // Rotate scene to the left
                     }
                 } else {
-                    // Up-down swipe
                     if (deltaY > 0) {
-                        // Swipe down
                         targetRotationX -= 0.1; // Rotate scene down
                     } else {
-                        // Swipe up
                         targetRotationX += 0.1; // Rotate scene up
                     }
                 }
 
-                // If swipe is detected, flag it and stop hover behavior
                 isSwiping = true;
                 touchStartX = event.clientX;
                 touchStartY = event.clientY;
             }
 
-            // Handle hover behavior only if not swiping
             if (!isSwiping) {
                 const mouseX = (event.clientX / window.innerWidth) * 2 - 1;
                 const mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
 
-                // Smoothly map mouse position to scene rotation
-                targetRotationX = mouseY * Math.PI; // Vertical rotation
-                targetRotationY = mouseX * Math.PI; // Horizontal rotation
+                targetRotationX = mouseY * Math.PI;
+                targetRotationY = mouseX * Math.PI;
             }
         });
 
         window.addEventListener('mouseup', () => {
             isTouching = false;
-            isSwiping = false;  // Reset swipe state
+            isSwiping = false;
         });
 
-        // Update camera aspect ratio and renderer size on window resize
         window.addEventListener('resize', () => {
             const width = window.innerWidth;
             const height = window.innerHeight;
-
             renderer.setSize(width, height);
-            renderer.setPixelRatio(window.devicePixelRatio);  // Adjust pixel ratio for high-DPI devices
+            renderer.setPixelRatio(window.devicePixelRatio);
             camera.aspect = width / height;
             camera.updateProjectionMatrix();
         });
@@ -247,41 +235,36 @@
             scene.rotation.x += (targetRotationX - scene.rotation.x) * rotationSpeed;
             scene.rotation.y += (targetRotationY - scene.rotation.y) * rotationSpeed;
 
-            // Smooth scaling effect on nodes using lerp (linear interpolation)
             nodes.forEach(node => {
                 node.scale.set(
                     THREE.MathUtils.lerp(node.scale.x, targetScale, scaleLerpSpeed),
                     THREE.MathUtils.lerp(node.scale.y, targetScale, scaleLerpSpeed),
                     THREE.MathUtils.lerp(node.scale.z, targetScale, scaleLerpSpeed)
-                ); // Smoothly interpolate between current scale and target scale
+                );
             });
         }
 
         function animate() {
             requestAnimationFrame(animate);
 
-            // Move nodes with their respective velocities
             nodes.forEach((node, i) => {
                 node.position.add(velocities[i]);
 
-                // Add boundary checks for nodes to bounce within the scene
                 if (Math.abs(node.position.x) > 5) velocities[i].x = -velocities[i].x;
                 if (Math.abs(node.position.y) > 5) velocities[i].y = -velocities[i].y;
                 if (Math.abs(node.position.z) > 5) velocities[i].z = -velocities[i].z;
 
-                // Adjust node transparency based on distance from camera
                 const distance = node.position.distanceTo(camera.position);
                 const maxDistance = 20;
-                const opacity = Math.max(0.1, 1 - distance / maxDistance); // Clamp opacity between 0.1 and 1
+                const opacity = Math.max(0.1, 1 - distance / maxDistance);
                 node.material.opacity = opacity;
             });
 
-            // Update line transparency based on distance from camera
             lines.forEach(line => {
                 const distStart = nodes[line.startIndex].position.distanceTo(camera.position);
                 const distEnd = nodes[line.endIndex].position.distanceTo(camera.position);
                 const avgDist = (distStart + distEnd) / 2;
-                const opacity = Math.max(0.1, 1 - avgDist / 20); // Adjust for line transparency
+                const opacity = Math.max(0.1, 1 - avgDist / 20);
                 line.material.opacity = opacity;
             });
 
