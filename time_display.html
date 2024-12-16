@@ -17,9 +17,9 @@
       margin: 0;
       padding: 0;
       background-color: transparent; /* Set background to transparent */
-      color: #FFFFFF; /* Set general text color to white */
+      color: #00FFCC; /* Set text color to greenish cyan */
       font-family: 'Courier New', monospace; /* Hacker-like font */
-      font-size: 16px; /* Smaller font size */
+      font-size: 20px; /* Smaller font size */
       height: 100vh;
       display: flex;
       justify-content: center;
@@ -36,29 +36,28 @@
       text-align: right;
       display: flex;
       flex-direction: column; /* Stack elements vertically */
-      gap: 1px; /* Reduced gap for closer spacing */
-      line-height: 1.2; /* Reduced line spacing */
+      gap: 2px; /* Further reduced gap for even closer spacing */
     }
 
     /* Ensure each line appears separately */
     .line {
       white-space: nowrap;
-      padding: 1px; /* Reduced padding for closer spacing */
+      padding: 2px; /* Further reduced padding for even closer spacing */
       letter-spacing: 1px; /* Slightly smaller letter spacing */
       display: block; /* Force each line to be on its own row */
-      color: #FFFFFF; /* Ensure text is white */
+      color: #00FFCC; /* Set text color to greenish cyan */
     }
 
-    /* Matrix-style glowing text (white) */
+    /* Matrix-style glowing text (greenish cyan) */
     .glitch {
       font-weight: bold;
-      color: #FFFFFF; /* Ensure the text color is white */
-      text-shadow: 0 0 5px #FFFFFF, 0 0 10px #FFFFFF, 0 0 15px #FFFFFF; /* Glowing effect in white */
+      color: #00FFCC; /* Set glitch text color to greenish cyan */
+      text-shadow: 0 0 5px #00FFCC, 0 0 10px #00FFCC, 0 0 15px #00FFCC; /* Glowing effect in greenish cyan */
     }
 
     /* Runtime styling */
     #runtime {
-      font-size: 14px; /* Smaller font size for runtime */
+      font-size: 18px;
       opacity: 0.7;
       display: block; /* Ensure runtime is on its own line */
     }
