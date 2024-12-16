@@ -84,19 +84,19 @@
             padding: 0;
         }
 
-        /* Styling for the profile image */
         .name-container {
             display: flex;
-            align-items: center; /* Vertically centers the image and text */
+            align-items: center;
         }
 
-       .profile-img {
-           width: 80px;   /* Adjust size */
-           height: 80px;  /* Adjust size */
-           border-radius: 50%; /* Makes the image circular */
-           margin-right: 10px; /* Space between the image and the name */
-           border: 3px solid #fff; /* Add a white border (you can change the color) */
-       }
+        .profile-img {
+            width: 80px;   
+            height: 80px;  
+            border-radius: 50%; 
+            margin-right: 10px;
+            border: 3px solid #fff;
+        }
+
         .header .name, 
         .header .abbreviated-name {
             font-family: 'Poppins', sans-serif;
@@ -135,12 +135,6 @@
             color: black;
             box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
             border-radius: 8px;
-        }
-
-        .header .nav a:active {
-            background-color: #f57c00;
-            color: white;
-            box-shadow: 0 0 12px rgba(0, 0, 0, 0.3);
         }
 
         .hamburger {
@@ -184,13 +178,7 @@
 
         .nav.open .close-btn {
             display: block;
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            font-size: 2em;
-            color: white;
             z-index: 10;
-            padding: 12px;
         }
 
         @media (max-width: 1050px) {
@@ -200,7 +188,7 @@
 
             .hamburger {
                 display: flex;
-                padding-right: 20px; /* Adjust this value to move it to the right */
+                padding-right: 20px; 
             }
         }
 
@@ -226,32 +214,7 @@
             color: white;
         }
 
-        /* Hover effects for links inside the open nav (under hamburger) */
-        .nav.open .nav-blogs:hover {
-            background-color: red;
-            color: black;
-            opacity: 0.8;
-        }
-
-        .nav.open .nav-portfolio:hover {
-            background-color: orange;
-            color: black;
-            opacity: 0.8;
-        }
-
-        .nav.open .nav-contact:hover {
-            background-color: blue;
-            color: black;
-            opacity: 0.8;
-        }
-
-        .nav.open .nav-skillset:hover {
-            background-color: violet;
-            color: black;
-            opacity: 0.8;
-        }
-
-        /* General hover effect when any link is hovered inside the open nav */
+        /* Hover effects for links inside the open nav */
         .nav.open a:hover,
         .nav.open a:active {
             background-color: #EEEE;
@@ -266,17 +229,12 @@
             color: white;
             box-shadow: 0 0 12px rgba(0, 0, 0, 0.3);
         }
-
-        /* Show the full name when the window is wide enough */
-        .header .name, .header .abbreviated-name {
-            opacity: 1 !important;
-        }
     </style>
 </head>
 <body>
 
     <!-- Embed the background iframe -->
-    <iframe id="background" src="background.html" frameborder="0" allowfullscreen></iframe>
+    <iframe id="background" src="background.html" frameborder="0" allowfullscreen loading="lazy"></iframe>
     <!-- Time display iframe with fixed positioning -->
     <iframe id="time-display" src="time_display.html" width="300" height="150" 
             style="position: fixed; bottom: 10px; right: 10px; z-index: 9999; border: none;"></iframe>
@@ -308,7 +266,7 @@
         <div class="header-overlay"></div>
     </div>
 
-    <script>
+    <script defer>
         // Adjust display when the window is resized
         function adjustDisplay() {
             const header = document.querySelector('.header');
@@ -316,45 +274,41 @@
             const abbreviatedName = document.querySelector('.abbreviated-name');
             const headerWidth = header.offsetWidth;
             const hamburger = document.querySelector('.hamburger');
+            const nav = document.querySelector('.nav');
 
-            if (headerWidth > 960) {
-                // Hide the hamburger when the window is wide enough
-                hamburger.style.display = 'none';
+            if (headerWidth <= 1050) {
+                hamburger.style.display = 'flex'; // Show hamburger on small screens
+                nav.classList.remove('open'); // Make sure the nav is closed on small screens
             } else {
-                hamburger.style.display = 'flex';
-            }
-
-            if (headerWidth <= 960) {
-                name.style.display = 'none';
-                abbreviatedName.style.display = 'block';
-            } else {
-                name.style.display = 'block';
-                abbreviatedName.style.display = 'none';
+                hamburger.style.display = 'none'; // Hide hamburger on large screens
+                nav.classList.add('open'); // Ensure menu is open on large screens
             }
         }
 
-        // Show/hide the navigation menu for mobile devices
+        // Function to toggle the navigation menu
         function toggleMenu() {
             const nav = document.querySelector('.nav');
             const hamburger = document.querySelector('.hamburger');
             const closeBtn = document.querySelector('.close-btn');
+            
             nav.classList.toggle('open');
-            hamburger.style.display = nav.classList.contains('open') ? 'none' : 'flex';
-            closeBtn.style.display = nav.classList.contains('open') ? 'block' : 'none';
+            
+            if (nav.classList.contains('open')) {
+                closeBtn.style.display = 'block'; // Show the close button
+            } else {
+                closeBtn.style.display = 'none'; // Hide the close button
+            }
         }
 
-        // Close the navigation menu
+        // Close the menu when clicking the close button
         function closeMenu() {
-            document.querySelector('.nav').classList.remove('open');
-            document.querySelector('.hamburger').style.display = 'flex';
-            document.querySelector('.close-btn').style.display = 'none';
+            const nav = document.querySelector('.nav');
+            nav.classList.remove('open');
         }
 
+        // Call adjustDisplay on page load and resize
+        window.onload = adjustDisplay;
         window.onresize = adjustDisplay;
-
-        // Initialize display based on window width
-        adjustDisplay();
     </script>
-
 </body>
 </html>
