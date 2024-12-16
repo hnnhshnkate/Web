@@ -58,6 +58,17 @@
             opacity: 1;
         }
 
+        /* Overlay for dimming the background and enhancing text visibility */
+        .header-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4); /* Semi-transparent black */
+            z-index: 2;
+        }
+
         @keyframes gradientAnimation {
             0% { background-position: 0% 50%; }
             20% { background-position: 50% 0%; }
@@ -208,9 +219,9 @@
             color: white;
         }
 
-        /* Fix text display */
+        /* Show the full name when the window is wide enough */
         .header .name, .header .abbreviated-name {
-            color: white !important; /* Ensure text stays solid white */
+            opacity: 1 !important;
         }
     </style>
 </head>
@@ -242,6 +253,9 @@
             <div></div>
             <div></div>
         </div>
+
+        <!-- Overlay for the header -->
+        <div class="header-overlay"></div>
     </div>
 
     <script>
@@ -261,20 +275,27 @@
             }
         }
 
-        window.addEventListener('resize', adjustDisplay);
-        window.addEventListener('load', adjustDisplay);
-
-        // Toggle menu visibility
+        // Show/hide the navigation menu for mobile devices
         function toggleMenu() {
             const nav = document.querySelector('.nav');
+            const hamburger = document.querySelector('.hamburger');
+            const closeBtn = document.querySelector('.close-btn');
             nav.classList.toggle('open');
+            hamburger.style.display = nav.classList.contains('open') ? 'none' : 'flex';
+            closeBtn.style.display = nav.classList.contains('open') ? 'block' : 'none';
         }
 
+        // Close the navigation menu
         function closeMenu() {
-            const nav = document.querySelector('.nav');
-            nav.classList.remove('open');
+            document.querySelector('.nav').classList.remove('open');
+            document.querySelector('.hamburger').style.display = 'flex';
+            document.querySelector('.close-btn').style.display = 'none';
         }
-    </script>
 
+        window.onresize = adjustDisplay;
+
+        // Initialize display based on window width
+        adjustDisplay();
+    </script>
 </body>
 </html>
