@@ -22,21 +22,9 @@
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: -2; /* Keep it behind other elements */
-            pointer-events: none; /* Make it non-interactive */
+            z-index: -2;
+            pointer-events: none;
             border: none;
-        }
-
-        /* Bottom overlay for gradient effect */
-        .bottom-overlay {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 70%; /* Covers the bottom 70% */
-            background: linear-gradient(to top, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0) 100%);
-            z-index: -1; /* Ensure it overlays the background */
-            pointer-events: none; /* Prevent it from blocking background hover or click */
         }
 
         .header {
@@ -47,42 +35,32 @@
             justify-content: space-between;
             align-items: center;
             padding: 10px 20px;
-            background: linear-gradient(90deg, red, orange, yellow, green, blue, indigo, violet);
-            background-size: 400% 400%;
-            animation: gradientAnimation 30s ease-in-out infinite;
+            background-color: #3c6e8f; /* Muted blue */
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             color: white;
             z-index: 1;
             box-sizing: border-box;
             transition: all 0.3s ease-in-out;
-            opacity: 1;
         }
 
-        /* Overlay for dimming the background and enhancing text visibility */
+        /* Overlay for dimming the background */
         .header-overlay {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.4); /* Semi-transparent black */
-            z-index: -1; /* Ensure it's behind the text */
-            pointer-events: none; /* Allow clicks to pass through */
-        }
-
-        @keyframes gradientAnimation {
-            0% { background-position: 0% 50%; }
-            20% { background-position: 50% 0%; }
-            40% { background-position: 100% 50%; }
-            60% { background-position: 50% 100%; }
-            80% { background-position: 0% 100%; }
-            100% { background-position: 0% 50%; }
+            background: rgba(0, 0, 0, 0.3); /* Slight black overlay */
+            z-index: -1;
+            pointer-events: none;
         }
 
         body {
             font-family: 'Roboto', sans-serif;
             margin: 0;
             padding: 0;
+            background-color: #f4f4f4; /* Light beige */
+            color: #333; /* Darker text color for readability */
         }
 
         .name-container {
@@ -93,9 +71,9 @@
         .profile-img {
             width: 80px;   
             height: 80px;  
-            border-radius: 50%; 
+            border-radius: 50%;
             margin-right: 10px;
-            border: 3px solid #fff;
+            border: 3px solid #f5c34d;
         }
 
         .header .name, 
@@ -108,6 +86,7 @@
             display: inline-block;
             opacity: 1;
             transition: opacity 0.3s ease;
+            color: #FFFFF; /*
         }
 
         .header .abbreviated-name {
@@ -119,7 +98,8 @@
             font-weight: 400;
             font-size: 1.2em;
             padding-left: 10px;
-            padding-top: -2px; /* Adjust this value to increase or decrease the space */
+            padding-top: -2px;
+            color: #dcd9d1; /* Beige text color for title */
         }
 
         .header .nav {
@@ -140,14 +120,14 @@
 
         .header .nav a:hover,
         .header .nav a:active {
-            background-color: #EEEE;
+            background-color: #f5c34d; /* Gold background on hover */
             color: black;
             box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
             border-radius: 8px;
         }
 
         .header .nav a:active {
-            background-color: #f57c00;
+            background-color: #e4a50b; /* Darker gold on active */
             color: white;
             box-shadow: 0 0 12px rgba(0, 0, 0, 0.3);
         }
@@ -170,7 +150,7 @@
 
         .hamburger:hover div {
             transform: scale(1.1);
-            background-color: #f57c00;
+            background-color: #f5c34d;
         }
 
         .close-btn {
@@ -197,7 +177,7 @@
             top: 10px;
             right: 10px;
             font-size: 2em;
-            color: white;
+            color: #f5c34d;
             z-index: 10;
             padding: 12px;
         }
@@ -285,7 +265,6 @@
             const hamburger = document.querySelector('.hamburger');
 
             if (headerWidth > 960) {
-                // Hide the hamburger when the window is wide enough
                 hamburger.style.display = 'none';
             } else {
                 hamburger.style.display = 'flex';
