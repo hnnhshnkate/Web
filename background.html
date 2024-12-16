@@ -35,9 +35,11 @@
            width: 100%;
            height: 50%; /* Cover the bottom 50% of the screen */
            background: linear-gradient(to top, 
-               #3c6e8f 0%,       /* Start with the solid color */
-               rgba(60, 110, 143, 0.6) 50%,  /* Slightly transparent color transition */
-               rgba(60, 110, 143, 0) 100%); /* End with fully transparent */
+               #3c6e8f 0%,               /* Start with the solid color */
+               rgba(60, 110, 143, 0.5) 30%,  /* Gradually transitioning to semi-transparent */
+               rgba(60, 110, 143, 0.15) 60%,  /* Continue fading */
+               rgba(60, 110, 143, 0.05) 80%,  /* More subtle fading */
+               rgba(60, 110, 143, 0) 100%);  /* End with fully transparent */
            z-index: 2; /* Ensure it is above the canvas */
        }
 
@@ -48,9 +50,9 @@
            bottom: 0;
            left: 0;
            width: 100%;
-           height: 40%;  /* Apply the blur to the bottom half of the screen */
+           height: 50%;  /* Apply the blur to the bottom half of the screen */
            background: transparent;
-           filter: blur(10px);  /* Adjust the blur strength here */
+           filter: blur(15px);  /* Increased blur strength for a softer effect */
            z-index: 3;  /* Make sure this is above the canvas */
        }
      
