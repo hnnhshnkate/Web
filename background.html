@@ -17,45 +17,46 @@
             margin: 0;
             overflow: hidden;
             background-color: black;
-            position: relative; /* Required for positioning the pseudo-element */
+            position: relative;
         }
 
         canvas {
             display: block;
             position: relative;
-            z-index: 1; /* Ensure the canvas is under the ombre */
+            z-index: 1;
+            opacity: 1;
+            transition: opacity 1s ease-in-out; /* Transition for fading */
         }
 
-       /* Ombre overlay */
-       body::after {
-           content: '';
-           position: absolute;
-           bottom: 0;
-           left: 0;
-           width: 100%;
-           height: 50%; /* Cover the bottom 50% of the screen */
-           background: linear-gradient(to top, 
-               #3c6e8f 0%,               /* Start with the solid color */
-               rgba(60, 110, 143, 0.5) 30%,  /* Gradually transitioning to semi-transparent */
-               rgba(60, 110, 143, 0.15) 60%,  /* Continue fading */
-               rgba(60, 110, 143, 0.05) 80%,  /* More subtle fading */
-               rgba(60, 110, 143, 0) 100%);  /* End with fully transparent */
-           z-index: 2; /* Ensure it is above the canvas */
-       }
+        /* Ombre overlay */
+        body::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 50%;
+            background: linear-gradient(to top, 
+                #3c6e8f 0%,               
+                rgba(60, 110, 143, 0.5) 30%,  
+                rgba(60, 110, 143, 0.15) 60%,  
+                rgba(60, 110, 143, 0.05) 80%,  
+                rgba(60, 110, 143, 0) 100%);
+            z-index: 2;
+        }
 
-       /* Blur effect at the bottom */
-       body::before {
-           content: '';
-           position: absolute;
-           bottom: 0;
-           left: 0;
-           width: 100%;
-           height: 50%;  /* Apply the blur to the bottom half of the screen */
-           background: transparent;
-           filter: blur(15px);  /* Increased blur strength for a softer effect */
-           z-index: 3;  /* Make sure this is above the canvas */
-       }
-     
+        /* Blur effect at the bottom */
+        body::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 50%;
+            background: transparent;
+            filter: blur(15px);
+            z-index: 3;
+        }
     </style>
 </head>
 <body>
@@ -73,7 +74,7 @@
         const nodes = [];
         const velocities = [];
         const nodeCount = 100;
-        const geometry = new THREE.SphereGeometry(0.1, 16, 16); // Smoother spheres
+        const geometry = new THREE.SphereGeometry(0.1, 16, 16); 
         let lines = [];
         const connections = [];
 
@@ -84,10 +85,10 @@
             cyan: new THREE.Color(0, 1.0, 1.0)
         };
 
-        const ambientLight = new THREE.AmbientLight(0x404040, 1); // Soft light
+        const ambientLight = new THREE.AmbientLight(0x404040, 1); 
         scene.add(ambientLight);
 
-        const pointLight = new THREE.PointLight(0xffffff, 1, 100); // Bright point light
+        const pointLight = new THREE.PointLight(0xffffff, 1, 100); 
         pointLight.position.set(10, 10, 10);
         scene.add(pointLight);
 
@@ -193,69 +194,11 @@
 
         let targetRotationX = 0;
         let targetRotationY = 0;
-        const rotationSpeed = 0.05; // Speed of scene rotation
+        const rotationSpeed = 0.05;
 
         let targetScale = 1;
-        const scaleSpeed = 0.2; // Speed of node scaling
-        const scaleLerpSpeed = 0.05; // Speed at which nodes scale back to the target size
-
-        let touchStartX = 0;
-        let touchStartY = 0;
-        let isTouching = false;
-        let isSwiping = false;
-
-        // Smoothing mouse movement with requestAnimationFrame
-        let lastMoveTime = 0;
-        const moveInterval = 1000 / 60; // 60 FPS
-
-        window.addEventListener('mousedown', (event) => {
-            isTouching = true;
-            isSwiping = false;
-            touchStartX = event.clientX;
-            touchStartY = event.clientY;
-        });
-
-        window.addEventListener('mousemove', (event) => {
-            const now = Date.now();
-            if (now - lastMoveTime < moveInterval) return; // Limit the update rate
-            lastMoveTime = now;
-
-            if (isTouching) {
-                const deltaX = event.clientX - touchStartX;
-                const deltaY = event.clientY - touchStartY;
-
-                if (Math.abs(deltaX) > Math.abs(deltaY)) {
-                    if (deltaX > 0) {
-                        targetRotationY -= 0.1; // Rotate scene to the right
-                    } else {
-                        targetRotationY += 0.1; // Rotate scene to the left
-                    }
-                } else {
-                    if (deltaY > 0) {
-                        targetRotationX -= 0.1; // Rotate scene down
-                    } else {
-                        targetRotationX += 0.1; // Rotate scene up
-                    }
-                }
-
-                isSwiping = true;
-                touchStartX = event.clientX;
-                touchStartY = event.clientY;
-            }
-
-            if (!isSwiping) {
-                const mouseX = (event.clientX / window.innerWidth) * 2 - 1;
-                const mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
-
-                targetRotationX = mouseY * Math.PI;
-                targetRotationY = mouseX * Math.PI;
-            }
-        });
-
-        window.addEventListener('mouseup', () => {
-            isTouching = false;
-            isSwiping = false;
-        });
+        const scaleSpeed = 0.2;
+        const scaleLerpSpeed = 0.05;
 
         window.addEventListener('resize', () => {
             const width = window.innerWidth;
@@ -264,19 +207,20 @@
             renderer.setPixelRatio(window.devicePixelRatio);
             camera.aspect = width / height;
             camera.updateProjectionMatrix();
+
+            // Check the window width and fade in/out based on the threshold (1024px)
+            if (window.innerWidth >= 1024) {
+                renderer.domElement.style.opacity = 1; // Ensure the figure is visible
+            } else {
+                renderer.domElement.style.opacity = 0; // Fade out when the window width is smaller
+            }
         });
 
-        function updateSceneRotation() {
-            scene.rotation.x += (targetRotationX - scene.rotation.x) * rotationSpeed;
-            scene.rotation.y += (targetRotationY - scene.rotation.y) * rotationSpeed;
-
-            nodes.forEach(node => {
-                node.scale.set(
-                    THREE.MathUtils.lerp(node.scale.x, targetScale, scaleLerpSpeed),
-                    THREE.MathUtils.lerp(node.scale.y, targetScale, scaleLerpSpeed),
-                    THREE.MathUtils.lerp(node.scale.z, targetScale, scaleLerpSpeed)
-                );
-            });
+        // Check the window width initially to set the opacity
+        if (window.innerWidth >= 1024) {
+            renderer.domElement.style.opacity = 1; // Ensure the figure is visible initially
+        } else {
+            renderer.domElement.style.opacity = 0; // Fade out when the page is first loaded
         }
 
         function animate() {
@@ -303,7 +247,6 @@
                 line.material.opacity = opacity;
             });
 
-            updateSceneRotation();
             updateConnections();
             renderer.render(scene, camera);
         }
