@@ -35,6 +35,8 @@
             z-index: -2;
             pointer-events: none;
             border: none;
+            opacity: 1;
+            transition: opacity 0.3s ease-in-out;
         }
 
         .header {
@@ -259,61 +261,38 @@
     </div>
 
     <script>
-        // Adjust display when the window is resized
-        function adjustDisplay() {
-            const header = document.querySelector('.header');
-            const name = document.querySelector('.name');
-            const abbreviatedName = document.querySelector('.abbreviated-name');
-            const headerWidth = header.offsetWidth;
-            const hamburger = document.querySelector('.hamburger');
+        // Function to smoothly change the background iframe source
+        function changeBackgroundSource(newSrc) {
+            // Add a fade-out effect
+            backgroundIframe.style.opacity = '0';
+            setTimeout(() => {
+                // Change the source after fade-out
+                backgroundIframe.src = newSrc;
+                // Add a fade-in effect
+                setTimeout(() => {
+                    backgroundIframe.style.opacity = '1';
+                }, 300); // Wait for the src to load
+            }, 300); // Match the CSS transition duration
+        }
 
-            if (headerWidth > 960) {
-                hamburger.style.display = 'none';
-            } else {
-                hamburger.style.display = 'flex';
+        // Function to determine which background to use
+        function updateBackground() {
+            const windowWidth = window.innerWidth;
+            const pcWidth = 1920; // Assuming a typical PC screen width
+            const halfPcWidth = pcWidth / 2;
+
+            if (windowWidth >= halfPcWidth && backgroundIframe.src.includes('background2.html')) {
+                changeBackgroundSource('background.html');
+            } else if (windowWidth < halfPcWidth && backgroundIframe.src.includes('background.html')) {
+                changeBackgroundSource('background2.html');
             }
-
-            if (headerWidth <= 960) {
-                name.style.display = 'none';
-                abbreviatedName.style.display = 'block';
-            } else {
-                name.style.display = 'block';
-                abbreviatedName.style.display = 'none';
-            }
         }
 
-        // Show/hide the navigation menu for mobile devices
-        function toggleMenu() {
-            const nav = document.querySelector('.nav');
-            const hamburger = document.querySelector('.hamburger');
-            const closeBtn = document.querySelector('.close-btn');
-            nav.classList.toggle('open');
-            hamburger.style.display = nav.classList.contains('open') ? 'none' : 'flex';
-            closeBtn.style.display = nav.classList.contains('open') ? 'block' : 'none';
-        }
+        // Add a resize event listener to dynamically update the background
+        window.addEventListener('resize', updateBackground);
 
-        // Close the navigation menu
-        function closeMenu() {
-            document.querySelector('.nav').classList.remove('open');
-            document.querySelector('.hamburger').style.display = 'flex';
-            document.querySelector('.close-btn').style.display = 'none';
-        }
-
-        window.onresize = adjustDisplay;
-
-        // Initialize display based on window width
-        adjustDisplay();
-
-        // Prevent right-click context menu
-        document.addEventListener('contextmenu', function(event) {
-            event.preventDefault();
-        });
-
-        // Prevent copy event
-        document.addEventListener('copy', function(event) {
-            event.preventDefault();
-            alert("Copying is disabled.");
-        });
+        // Initial background update based on current window size
+        updateBackground();
     </script>
 
 </body>
