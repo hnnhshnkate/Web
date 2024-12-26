@@ -4,7 +4,7 @@
  *
  * This code is licensed under the MIT License.
  * See the LICENSE file for more information.
--->
+ -->
 
 <!DOCTYPE html>
 <html lang="en">
@@ -23,7 +23,6 @@
             padding: 0;
             background-color: #f4f4f4; /* Light beige */
             color: #333; /* Darker text color for readability */
-            position: relative;
         }
 
         /* Fix the background iframe to stay behind everything */
@@ -38,9 +37,9 @@
             border: none;
         }
 
-        /* Header Styling */
         .header {
             position: relative;
+            top: 0;
             width: 100%;
             display: flex;
             justify-content: space-between;
@@ -54,7 +53,7 @@
             transition: all 0.3s ease-in-out;
         }
 
-        /* Overlay for dimming the header background */
+        /* Overlay for dimming the background */
         .header-overlay {
             position: absolute;
             top: 0;
@@ -66,13 +65,11 @@
             pointer-events: none;
         }
 
-        /* Name Container */
         .name-container {
             display: flex;
             align-items: center;
         }
 
-        /* Profile Image Styling */
         .profile-img {
             width: 80px;   
             height: 80px;  
@@ -81,25 +78,23 @@
             border: 3px solid #f5c34d;
         }
 
-        /* Header Name Styling */
         .header .name, 
         .header .abbreviated-name {
             font-family: 'Poppins', sans-serif;
             font-weight: 600;
-            font-size: 2em; /* Reduced from 4em for better responsiveness */
+            font-size: 4em;
             padding-left: 10px;
             white-space: nowrap;
             display: inline-block;
             opacity: 1;
             transition: opacity 0.3s ease;
-            color: white; /* Corrected color code from #FFFFF to white */
+            color: #FFFFF;
         }
 
         .header .abbreviated-name {
             display: none;
         }
 
-        /* Header Title Styling */
         .header .title {
             font-family: 'Poppins', sans-serif;
             font-weight: 400;
@@ -109,7 +104,6 @@
             color: #dcd9d1; /* Beige text color for title */
         }
 
-        /* Navigation Styling */
         .header .nav {
             display: flex;
             gap: 20px;
@@ -140,7 +134,6 @@
             box-shadow: 0 0 12px rgba(0, 0, 0, 0.3);
         }
 
-        /* Hamburger Menu Styling */
         .hamburger {
             display: none;
             cursor: pointer;
@@ -162,7 +155,6 @@
             background-color: #f5c34d;
         }
 
-        /* Close Button Styling */
         .close-btn {
             display: none;
             cursor: pointer;
@@ -192,7 +184,6 @@
             padding: 12px;
         }
 
-        /* Media Queries for Responsiveness */
         @media (max-width: 1050px) {
             .header .nav {
                 display: none;
@@ -225,60 +216,9 @@
             color: white;
         }
 
-        /* Profile Info Styling */
-        .profile-info {
-            position: absolute; /* Positions it relative to the nearest positioned ancestor */
-            top: 100px; /* Adjusts position below the header */
-            left: 20px; /* Aligns it to the left */
-            background-color: rgba(255, 255, 255, 0.9); /* Semi-transparent background for visibility */
-            padding: 15px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow for effect */
-            border-radius: 8px;
-            font-family: 'Poppins', sans-serif;
-            font-size: 1em;
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            z-index: 1;
-            max-width: 300px;
-            transition: opacity 0.3s ease, visibility 0.3s ease;
-        }
-
-        .profile-info h2 {
-            margin: 0;
-            font-size: 1.5em;
-            color: #3c6e8f;
-        }
-
-        .profile-info p {
-            margin: 5px 0 0;
-            color: #666;
-            font-size: 1em;
-        }
-
-        /* Hide profile-info on smaller screens */
-        @media (max-width: 960px) {
-            .profile-info {
-                opacity: 0;
-                visibility: hidden;
-            }
-        }
-
-        /* Optional: Adjust positioning for different screen sizes */
-        @media (min-width: 961px) and (max-width: 1280px) {
-            .profile-info {
-                top: 100px;
-                left: 20px;
-                max-width: 250px;
-            }
-        }
-
-        @media (min-width: 1281px) {
-            .profile-info {
-                top: 100px;
-                left: 20px;
-                max-width: 300px;
-            }
+        /* Show the full name when the window is wide enough */
+        .header .name, .header .abbreviated-name {
+            opacity: 1 !important;
         }
     </style>
 </head>
@@ -286,18 +226,16 @@
 
     <!-- Embed the background iframe -->
     <iframe id="background" src="background.html" frameborder="0" allowfullscreen></iframe>
-    
     <!-- Time display iframe with fixed positioning -->
     <iframe id="time-display" src="time_display.html" width="300" height="150" 
             style="position: fixed; bottom: 10px; right: 10px; z-index: 9999; border: none;"></iframe>
-    
     <!-- Bottom overlay for gradient effect -->
     <div class="bottom-overlay"></div>
 
     <!-- Header section -->
     <div class="header">
         <div class="name-container">
-            <img src="image.jpg" alt="Profile Image" class="profile-img">
+            <img src="image.jpg" alt="Image" class="profile-img">
             <div class="name">HSKP</div>
             <div class="abbreviated-name">HSKP</div>
         </div>
@@ -319,35 +257,27 @@
         <div class="header-overlay"></div>
     </div>
 
-    <!-- Profile Information Section -->
-    <div class="profile-info">
-        <h2>Hannah Pahama</h2>
-        <p>Web Developer | Designer | Creative Thinker</p>
-        <!-- You can add more details as needed -->
-    </div>
-
     <script>
         // Adjust display when the window is resized
         function adjustDisplay() {
             const header = document.querySelector('.header');
             const name = document.querySelector('.name');
             const abbreviatedName = document.querySelector('.abbreviated-name');
-            const headerWidth = window.innerWidth;
+            const headerWidth = header.offsetWidth;
             const hamburger = document.querySelector('.hamburger');
-            const profileInfo = document.querySelector('.profile-info');
 
             if (headerWidth > 960) {
                 hamburger.style.display = 'none';
-                name.style.display = 'block';
-                abbreviatedName.style.display = 'none';
-                profileInfo.style.opacity = '1';
-                profileInfo.style.visibility = 'visible';
             } else {
                 hamburger.style.display = 'flex';
+            }
+
+            if (headerWidth <= 960) {
                 name.style.display = 'none';
                 abbreviatedName.style.display = 'block';
-                profileInfo.style.opacity = '0';
-                profileInfo.style.visibility = 'hidden';
+            } else {
+                name.style.display = 'block';
+                abbreviatedName.style.display = 'none';
             }
         }
 
@@ -368,9 +298,10 @@
             document.querySelector('.close-btn').style.display = 'none';
         }
 
+        window.onresize = adjustDisplay;
+
         // Initialize display based on window width
-        window.addEventListener('resize', adjustDisplay);
-        window.addEventListener('load', adjustDisplay);
+        adjustDisplay();
 
         // Prevent right-click context menu
         document.addEventListener('contextmenu', function(event) {
